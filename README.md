@@ -1,4 +1,4 @@
-# Tauri + React + Typescript
+# Tauri + React + Typescript + TaildWind
 
 Plantilla inicial de React y Typescript en Vite.
 
