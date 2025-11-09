@@ -1,4 +1,3 @@
-// src/commands.rs
 use crate::services::auth::AuthService;
 use crate::errors::{AppError};
 use serde::{Deserialize, Serialize};
