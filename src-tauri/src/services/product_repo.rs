@@ -1,4 +1,4 @@
-use crate::{models::product::Product};
+use crate::models::product::{Product};
 use super::db;
 use rusqlite::{Result, params};
 
@@ -36,6 +36,28 @@ pub fn find_product_by_code(code: String) -> Result<Option<Product>>{
     }else{
         Ok(None)
     }
+}
+
+pub fn stock_out(code:String, cant: i32) -> Result<Option<Product>, rusqlite::Error>{
+    let product_busq = find_product_by_code(code)?;
+
+    if let Some(mut product) = product_busq {
+        product.stock -= cant;
+        let _ = update_product_stock(&product);
+        Ok(Some(product))
+    }else {
+        print!("JAJAJAJJ qué?");
+        Ok(None)
+    }
+}
+
+pub fn update_product_stock(product: &Product) -> Result<()>{
+    let conn = db::get_connection()?;
+
+    conn.execute("UPDATE products SET stock = ?1 WHERE code = ?2",
+    params![product.stock, product.code])?;
+
+    Ok(())
 }
 
 pub fn all_products() ->Result<Vec<Product>, String> {

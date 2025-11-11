@@ -13,7 +13,7 @@ fn greet(name: &str) -> String {
 
 pub fn run() {
 
-    test_product_by_code();
+    // test_product_by_code();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -22,7 +22,8 @@ pub fn run() {
             commands::login,
             commands::add_product,
             commands::get_product_by_code,
-            commands::get_all_products
+            commands::get_all_products,
+            commands::stock_out
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
