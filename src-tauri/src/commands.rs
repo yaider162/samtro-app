@@ -48,3 +48,20 @@ pub async fn add_product(product: Product) -> Result<DefaultResponse, String> {
         Err(_) => Ok(DefaultResponse { success: false })
     }
 }
+
+#[tauri::command]
+pub async fn get_all_products() -> Result<Vec<Product>, String> {
+    match product_repo::all_products() {
+        Ok(products) => Ok(products),
+        Err(_) => Err("JAJa error al retornar los productos".into())
+    }
+}
+
+#[tauri::command]
+pub async fn get_product_by_code(code: String) -> Result<Product, String>{
+    match product_repo::find_product_by_code(code) {
+        Ok(Some(product)) => Ok(product),
+        Ok(None) => Err("JAJA fallo el get_product_by_code".into()),
+        Err(_) => Err("JAJA fallo el get_product_by_code".into())
+    }
+}

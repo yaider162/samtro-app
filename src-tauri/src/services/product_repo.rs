@@ -37,3 +37,29 @@ pub fn find_product_by_code(code: String) -> Result<Option<Product>>{
         Ok(None)
     }
 }
+
+pub fn all_products() ->Result<Vec<Product>, String> {
+    let conn = db::get_connection().map_err(|e| e.to_string())?;
+
+    let mut stmt = conn.prepare("SELECT code, name, category, price, stock, minimum, description FROM products").map_err(|e| e.to_string())?;
+
+    let rows = stmt.query_map([], |row|{
+        Ok(Product {
+            code: row.get(0)?,
+            name: row.get(1)?,
+            category: row.get(2)?,
+            price: row.get(3)?,
+            stock: row.get(4)?,
+            minimum: row.get(5)?,
+            description: row.get(6)?,
+        })
+    }).map_err(|e| e.to_string())?;
+
+    // Cambio los resultados a un vector
+    let mut products = Vec::new();
+    for product in rows {
+        products.push(product.map_err(|e| e.to_string())?);
+    }
+    println!("{:#?}", products);
+    Ok(products)
+}
