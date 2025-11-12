@@ -11,14 +11,8 @@ import {
   Menu,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { PageType } from "../utils/props";
 
-type PageType =
-  | "dashboard"
-  | "productos"
-  | "entrada"
-  | "salida"
-  | "crear-producto"
-  | "reportes";
 
 interface MenuItem {
   id: string;
@@ -31,7 +25,7 @@ type SidebarProps = {
     currentPage: PageType;
 };
 
-export default function Sidebar({setCurrentPage,currentPage}: SidebarProps) {
+export  function Sidebar({setCurrentPage,currentPage}: SidebarProps) {
     const navigate = useNavigate();
   
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -40,10 +34,10 @@ export default function Sidebar({setCurrentPage,currentPage}: SidebarProps) {
 
   const menuItems: MenuItem[] = [
     { id: "dashboard", label: "Panel de Control", icon: Home },
-    { id: "productos", label: "Productos", icon: Package },
-    { id: "entrada", label: "Entrada Stock", icon: TrendingUp },
-    { id: "salida", label: "Salida Stock", icon: TrendingDown },
-    { id: "reportes", label: "Reportes", icon: FileText },
+    { id: "products", label: "Productos", icon: Package },
+    { id: "entry", label: "Entrada Stock", icon: TrendingUp },
+    { id: "exit", label: "Salida Stock", icon: TrendingDown },
+    { id: "reports", label: "Reportes", icon: FileText },
   ];
 
   const handleToggleSidebar = () => {
@@ -79,7 +73,7 @@ export default function Sidebar({setCurrentPage,currentPage}: SidebarProps) {
           return (
             <button
               key={item.id}
-              onClick={() =>{    setCurrentPage(item.id as PageType);console.log(item,currentPage);
+              onClick={() =>{    setCurrentPage(item.id as PageType);
               }}
               className={`w-full flex items-center px-4 py-3 mb-2 rounded-lg transition-all  whitespace-nowrap h-[48px]  ${
                 currentPage === item.id
