@@ -23,8 +23,19 @@ pub fn get_connection() -> Result<Connection> {
             price INTEGER NOT NULL,
             stock INTEGER NOT NULL,
             minimum INTEGER NOT NULL,
-            description TEXT
+            description TEXT,
+            atcive BOOLEAN NOT NULL
         );",
     )?;
+
+    // Creo la tabla movimientos
+    conn.execute_batch("
+        CREATE TABLE IF NOT EXISTS movements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_code TEXT UNIQUE NOT NULL,
+        stock INTEGER,
+        date TEXT,
+        type_move TEXT);")?;
+
     Ok(conn)
 }

@@ -10,3 +10,4 @@ pub mod movement;
 
 pub use user::User;
 pub use product::Product;
+pub use movement::Move;

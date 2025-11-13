@@ -1,6 +1,8 @@
-use crate::models::product::{Product};
+use crate::{commands, models::{Move, product::Product}};
 use super::db;
 use rusqlite::{Result, params};
+use chrono::Local;
+use super::movements_repo;
 
 // funcion para insertar producto nuevo
 pub fn insert_product(product: &Product) -> Result<()> {
@@ -11,6 +13,13 @@ pub fn insert_product(product: &Product) -> Result<()> {
     conn.execute("INSERT INTO products (code, name, category, price, stock, minimum, description, active) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
     params![product.code, product.name, product.category, product.price, product.stock, product.minimum, product.description, true])?;
 
+    let mov = Move {
+        product_code: product.code.clone(),
+        stock: product.stock,
+        date: Local::now().date_naive().to_string(),
+        type_move: "Insertar usuario".into()
+    };
+    let _ = movements_repo::add_mode(&mov);
     Ok(())
 }
 
@@ -39,6 +48,7 @@ pub fn find_product_by_code(code: String) -> Result<Option<Product>>{
     }
 }
 
+// Saco stock
 pub fn stock_out(code:String, cant: i32) -> Result<Option<Product>, rusqlite::Error>{
     let product_busq = find_product_by_code(code)?;
 
@@ -52,6 +62,7 @@ pub fn stock_out(code:String, cant: i32) -> Result<Option<Product>, rusqlite::Er
     }
 }
 
+// Meto stock
 pub fn stock_in(code:String, cant: i32) -> Result<Option<Product>, rusqlite::Error>{
     let product_busq = find_product_by_code(code)?;
 
@@ -65,6 +76,7 @@ pub fn stock_in(code:String, cant: i32) -> Result<Option<Product>, rusqlite::Err
     }
 }
 
+// Actualizo la db con los cambios
 pub fn update_product_stock(product: &Product) -> Result<()>{
     let conn = db::get_connection()?;
 
@@ -74,6 +86,7 @@ pub fn update_product_stock(product: &Product) -> Result<()>{
     Ok(())
 }
 
+// Obtengo todos los productos en array
 pub fn all_products() ->Result<Vec<Product>, String> {
     let conn = db::get_connection().map_err(|e| e.to_string())?;
 
