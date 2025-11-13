@@ -25,7 +25,8 @@ pub fn run() {
             commands::get_product_by_code,
             commands::get_all_products,
             commands::stock_out,
-            commands::stock_in
+            commands::stock_in,
+            commands::get_last_10_moves
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

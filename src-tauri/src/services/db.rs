@@ -24,7 +24,7 @@ pub fn get_connection() -> Result<Connection> {
             stock INTEGER NOT NULL,
             minimum INTEGER NOT NULL,
             description TEXT,
-            atcive BOOLEAN NOT NULL
+            active BOOLEAN NOT NULL
         );",
     )?;
 

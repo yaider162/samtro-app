@@ -1,4 +1,4 @@
-use crate::{commands, models::{Move, product::Product}};
+use crate::{models::{Move, product::Product}};
 use super::db;
 use rusqlite::{Result, params};
 use chrono::Local;
@@ -13,13 +13,14 @@ pub fn insert_product(product: &Product) -> Result<()> {
     conn.execute("INSERT INTO products (code, name, category, price, stock, minimum, description, active) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
     params![product.code, product.name, product.category, product.price, product.stock, product.minimum, product.description, true])?;
 
+    // Crea un movimiento y lo guarda en la db
     let mov = Move {
         product_code: product.code.clone(),
         stock: product.stock,
         date: Local::now().date_naive().to_string(),
-        type_move: "Insertar usuario".into()
+        type_move: "Insertar producto".into()
     };
-    let _ = movements_repo::add_mode(&mov);
+    let _ = movements_repo::add_move(&mov);
     Ok(())
 }
 

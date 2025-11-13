@@ -1,4 +1,5 @@
 use crate::models::Product;
+use crate::models::Move;
 use crate::services::auth::AuthService;
 use crate::errors::{AppError};
 use crate::services::product_repo;
@@ -42,10 +43,10 @@ pub async fn login(entry: UserEntry) -> Result<LoginResponse, String> {
 }
 
 #[tauri::command]
-pub async fn add_product(product: Product) -> Result<DefaultResponse, String> {
+pub async fn add_product(product: Product) -> Result<String, String> {
     match product_repo::insert_product(&product) {
-        Ok(_product) => Ok(DefaultResponse { success: true }),
-        Err(_) => Ok(DefaultResponse { success: false })
+        Ok(_product) => Ok("Producto añadido a la base de datos".into()),
+        Err(e) => Ok(e.to_string())
     }
 }
 
@@ -53,7 +54,7 @@ pub async fn add_product(product: Product) -> Result<DefaultResponse, String> {
 pub async fn get_all_products() -> Result<Vec<Product>, String> {
     match product_repo::all_products() {
         Ok(products) => Ok(products),
-        Err(_) => Err("JAJa error al retornar los productos".into())
+        Err(e) => Err(e.to_string())
     }
 }
 
@@ -81,5 +82,14 @@ pub async fn stock_in(code:String, cant: i32) -> Result<Product, String>{
         Ok(Some(product)) => Ok(product),
         Ok(None) => Err("JAJA fallo el get_product_by_code".into()),
         Err(_) => Err(" JAJA fallo el stock_in".into())
+    }
+}
+
+#[tauri::command]
+pub async fn get_last_10_moves() -> Result<Vec<Move>, String> {
+    let moves = crate::services::movements_repo::get_last_10_moves();
+    match moves {
+        Ok(moves) => Ok(moves),
+        Err(e) => Err(e.to_string())
     }
 }
