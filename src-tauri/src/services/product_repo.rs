@@ -145,7 +145,7 @@ pub fn update_product(product: &Product) -> Result<(), rusqlite::Error> {
     // inserto en la db el producto
     conn.execute(
         "UPDATE products SET name = ?1, category = ?2, price = ?3, stock = ?4, minimum = ?5, description = ?6, active = ?7 WHERE code = ?8",
-    params![product.code, product.name, product.category, product.price, product.stock, product.minimum, product.description, true])?;
+    params![ product.name, product.category, product.price, product.stock, product.minimum, product.description, true , product.code])?;
 
     // Crea un movimiento y lo guarda en la db
     let mov = Move {
