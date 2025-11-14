@@ -33,6 +33,7 @@ export function usePopup() {
         type,
         title,
       });
+      
 
       setVisible(true);
 

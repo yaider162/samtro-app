@@ -2,28 +2,32 @@ import { useEffect, useState } from "react";
 import { Product } from "../utils/props";
 import { usePopup } from "../utils/usePopup";
 import { useConfirmation } from "../utils/useConfirmation";
-import { TrendingUp, Search } from "lucide-react";
+import { TrendingDown, Search } from "lucide-react";
 import { useProducts } from "../contexts/ProductsContext";
-import { addStock } from "../utils/api";
 import Button from "../components/Button";
 import { PageType } from "../utils/props";
+import Calendar from "../components/Calendar";
+import { removeStock } from "../utils/api";
+import { useMoves } from "../contexts/MovementsContext";
 interface Props {
   setCurrentPage: (page: PageType) => void;
 }
 
-export default function EntryPage({ setCurrentPage }: Props) {
+export default function ExitPage({ setCurrentPage }: Props) {
   const { showPopup, PopupComponent, visible: popupVisible } = usePopup();
   const {
     showConfirmation,
     ConfirmationComponent,
     visible: confirmationVisible,
   } = useConfirmation();
+  
   const { products, actualizeProducts } = useProducts();
 
   const [searchedProducts, setSearchedProducts] = useState<Product[]>(products);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  // const [stockDate, setStockDate] = useState<Date | null>(new Date());
+  
+//   const [stockDate, setStockDate] = useState<Date | null>(new Date());
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -53,12 +57,13 @@ export default function EntryPage({ setCurrentPage }: Props) {
         });
         return;
       }
+      
 
-      const response = await addStock(selectedProduct.code, amount);
+      const response = await removeStock(selectedProduct.code, amount);
       if (response) {
         showPopup({
-          message: "Entrada de stock realizada con éxito",
-          title: "Exito entrada de stock",
+          message: "Salida de stock realizada con éxito",
+          title: "Exito salida de stock",
           type: "success",
         });
         setSelectedProduct(null);
@@ -68,8 +73,8 @@ export default function EntryPage({ setCurrentPage }: Props) {
         localStorage.setItem("amount", (Number(localStorage.getItem("amount")||0) + 1).toString());
       } else {
         showPopup({
-          message: "Error al realizar la entrada de stock",
-          title: "Error entrada de stock",
+          message: "Error al realizar la salida de stock",
+          title: "Error salida de stock",
           type: "error",
         });
       }
@@ -81,15 +86,22 @@ export default function EntryPage({ setCurrentPage }: Props) {
   const handleEntry = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    
     const stock = parseInt(
-      (document.getElementById("cantidad-stock") as HTMLInputElement).value
+        (document.getElementById("cantidad-stock") as HTMLInputElement).value
     );
-    const message: string = `¿Estás seguro de realizar la entrada de !*#${stock}!*# unidad${
+    if((selectedProduct?.stock||0) < stock){
+        showPopup({
+            message: "No hay suficiente stock para realizar la salida",
+            title: "Error salida de stock",
+            type: "warning",
+        });
+        return;
+    }
+    const message: string = `¿Estás seguro de realizar la salida de !*#${stock}!*# unidad${
       stock == 1 ? "" : "es"
     } del producto !*#${selectedProduct?.name}!*#?`;
-    const title: string = `Confirmar Entrada de Stock`;
-    console.log(message, title);
-
+    const title: string = `Confirmar Salida de Stock`;
     showConfirmation({
       title,
       message,
@@ -98,13 +110,14 @@ export default function EntryPage({ setCurrentPage }: Props) {
         const form = e.target as HTMLFormElement;
         form.reset();
       },
+      color: "red",
     });
   };
 
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        Registrar Entrada de Stock
+        Registrar Salida de Stock
       </h1>
 
       <div className="bg-white rounded-xl shadow-md p-8">
@@ -193,7 +206,8 @@ export default function EntryPage({ setCurrentPage }: Props) {
                 required
               />
             </div>
-             {/*TODO Por implementar fechas en backend
+            
+            {/*TODO Por implementar fechas en backend
              <div>
               <label className="block text-gray-700 font-medium mb-2">
                 Fecha <span className="text-red-300">*</span>
@@ -214,21 +228,17 @@ export default function EntryPage({ setCurrentPage }: Props) {
           </div>
 
           <div className="flex justify-end space-x-4">
-            <Button
-              color="white"
-              type="button"
-              onClick={() => setCurrentPage("dashboard")}
-            >
+            <Button onClick={() => setCurrentPage("dashboard")}>
               <div>Cancelar</div>
             </Button>
             <Button
               type="submit"
-              color="green"
+              color="red"
               disabled={popupVisible || confirmationVisible}
             >
               <div className="flex items-center ">
-                <TrendingUp size={20} className="mr-2" />
-                Registrar Entrada
+                <TrendingDown size={20} className="mr-2" />
+                Registrar Salida
               </div>
             </Button>
           </div>

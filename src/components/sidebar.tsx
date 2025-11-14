@@ -63,11 +63,11 @@ export  function Sidebar({setCurrentPage,currentPage}: SidebarProps) {
           onClick={handleToggleSidebar}
           className="text-gray-400 hover:text-white"
         >
-          {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          {sidebarOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-4 transition-all duration-300">
         {menuItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -91,6 +91,7 @@ export  function Sidebar({setCurrentPage,currentPage}: SidebarProps) {
       <div className="p-4 border-t border-gray-700">
         <button
           onClick={() => {
+            localStorage.removeItem("amount");
             navigate("/");
           }}
           className="w-full flex items-center px-4 py-3 text-gray-400 hover:bg-gray-800 hover:text-white rounded-lg transition"

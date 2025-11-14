@@ -1,9 +1,9 @@
-import { Package } from "lucide-react";
+import { Eye, EyeClosed, Package } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { usePopup } from "../utils/usePopup";
-import { Loading, TriLine } from "../components/Animate";
+import { useAdmin } from "../contexts/AdminContext";
 
 interface LoginResponse {
   success: boolean;
@@ -14,13 +14,18 @@ interface LoginResponse {
 export function LoginPage() {
   const navigate = useNavigate();
   const { showPopup, PopupComponent, visible } = usePopup();
+  const {setName}=useAdmin();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
 
-  const handleLogin = async () => {
+  const handleLogin = useCallback(async () => {
     if (visible) return;
+
+    const username = (document.getElementById("username") as HTMLInputElement)
+      .value;
+    const password = (document.getElementById("password") as HTMLInputElement)
+      .value;
+
     const response = await invoke<LoginResponse>("login", {
       entry: { username, password },
     });
@@ -34,9 +39,9 @@ export function LoginPage() {
       });
     } else {
       navigate("/dashboard");
-      localStorage.setItem("username", response.username);
+      setName(response.username);
     }
-  };
+  }, [ navigate, showPopup]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -59,11 +64,10 @@ export function LoginPage() {
               Usuario
             </label>
             <input
+              id="username"
               type="text"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="Ingrese su usuario"
-              onChange={(e) => setUsername(e.target.value)}
-              value={username}
               required
             />
           </div>
@@ -71,19 +75,31 @@ export function LoginPage() {
             <label className="block text-gray-700 mb-2 font-medium">
               Contraseña
             </label>
-            <input
-              type="password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Ingrese su contraseña"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
-            />
+            <div className="relative w-full">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                className="appearance-none w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Ingrese su contraseña"
+                required
+              />
+              <button
+                type="button"
+                className="absolute top-1/2 right-4 transform -translate-y-1/2"
+                onClick={() => setShowPassword(!showPassword)}
+                >
+                {showPassword ? (
+                  <Eye size={20} color="blue" />
+                ) : (
+                  <EyeClosed color="blue" size={20} />
+                )}
+              </button>
+            </div>
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition font-medium flex  justify-center items-center"
             disabled={visible}
+            className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition font-medium flex  justify-center items-center"
           >
             <div className="flex flex-row items-center gap-4 justify-center">
               Iniciar sesion

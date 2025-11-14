@@ -4,7 +4,8 @@ export type PageType =
   | "create-product"
   | "entry"
   | "exit"
-  | "reports";
+  | "reports"
+  | "edit-product";
 
 export interface Product {
   code: string;
@@ -14,10 +15,15 @@ export interface Product {
   minimum: number;
   price: number;
   description: string;
+  active: boolean;
 }
 
-export interface DefaultResponse {
-  succes: boolean;
+export interface Move{
+  type_move: "entry" | "exit"|"edit"|"delete"|"create";
+  product_code: string;
+  date: string;
+  stock: number;
+  name?: string;
 }
 
 export type PopupType = "success" | "error" | "info" | "warning";
