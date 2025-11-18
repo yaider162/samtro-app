@@ -4,8 +4,6 @@ import {
   TrendingUp,
   TrendingDown,
   AlertCircle,
-  FileText,
-  Calendar,
   DollarSign,
 } from "lucide-react";
 import { Sidebar } from "../components/Sidebar";

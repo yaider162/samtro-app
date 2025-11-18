@@ -10,7 +10,7 @@ export default function CreateProductPage({
 }: {
   setCurrentPage: (page: PageType) => void;
 }) {
-  const { showPopup, PopupComponent, visible } = usePopup();
+  const { showPopup, PopupComponent } = usePopup();
   const { products, actualizeProducts } = useProducts();
   const { showConfirmation, ConfirmationComponent } = useConfirmation();
 

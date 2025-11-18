@@ -1,4 +1,4 @@
-import { useState, useCallback, use } from "react";
+import { useState, useCallback } from "react";
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from "lucide-react";
 import { PopupType } from "../utils/props";
 
@@ -33,7 +33,7 @@ export function usePopup() {
         type,
         title,
       });
-      
+
 
       setVisible(true);
 

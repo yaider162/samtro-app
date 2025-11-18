@@ -19,7 +19,7 @@ export default function Calendar({ date, setDate }: Props) {
     return date.toLocaleDateString('es-ES', options);
   };
 
-  const CustomInput = ({ value, onClick }: { value?: string; onClick?: () => void }) => (
+  const CustomInput = ({  onClick }: { value?: string; onClick?: () => void }) => (
     <div
       onClick={onClick}
       className="w-[350px] px-4 py-3 h-[50px] border border-gray-300 rounded-lg bg-white cursor-pointer flex items-center justify-between hover:border-gray-400 transition-colors focus-within:ring-2 focus-within:ring-green-500 focus-within:border-green-500"
