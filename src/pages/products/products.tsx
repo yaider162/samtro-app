@@ -15,7 +15,7 @@ export default function ProductsPage({
   setCurrentPage,
   setSelectedProduct,
 }: Props) {
-  const { showPopup, PopupComponent } = usePopup();
+  const {  PopupComponent } = usePopup();
   const { showConfirmation, ConfirmationComponent } = useConfirmation();
   const { products , actualizeProducts} = useProducts();
 

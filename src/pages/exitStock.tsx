@@ -6,9 +6,7 @@ import { TrendingDown, Search } from "lucide-react";
 import { useProducts } from "../contexts/ProductsContext";
 import Button from "../components/Button";
 import { PageType } from "../utils/props";
-import Calendar from "../components/Calendar";
 import { removeStock } from "../utils/api";
-import { useMoves } from "../contexts/MovementsContext";
 interface Props {
   setCurrentPage: (page: PageType) => void;
 }
