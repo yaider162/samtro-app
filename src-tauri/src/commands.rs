@@ -106,10 +106,10 @@ pub async fn disable_product(code: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-pub async fn save_report(message: String, date: String, _type: String) -> Result<String, String> {
+pub async fn save_report(message: String, _type: String) -> Result<String, String> {
     let report = crate::models::Report {
         message,
-        date,
+        date: chrono::Local::now().naive_local().to_string(),
         _type,
     };
 
