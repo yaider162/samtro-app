@@ -7,7 +7,9 @@ cuales son los modulos
 pub mod user;
 pub mod product;
 pub mod movement;
+pub mod report;
 
 pub use user::User;
 pub use product::Product;
 pub use movement::Move;
+pub use report::Report;

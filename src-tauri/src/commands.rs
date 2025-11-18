@@ -104,3 +104,25 @@ pub async fn disable_product(code: String) -> Result<String, String> {
         Err(e) => Err(e.to_string())
     }
 }
+
+#[tauri::command]
+pub async fn save_report(message: String, date: String, _type: String) -> Result<String, String> {
+    let report = crate::models::Report {
+        message,
+        date,
+        _type,
+    };
+
+    match crate::services::report_repo::save_report(&report) {
+        Ok(_) => Ok("Reporte guardado con exito".into()),
+        Err(e) => Err(e.to_string())
+    }
+}
+
+#[tauri::command]
+pub async fn get_all_reports() -> Result<Vec<crate::models::Report>, String> {
+    match crate::services::report_repo::get_all_reports() {
+        Ok(reports) => Ok(reports),
+        Err(e) => Err(e.to_string())
+    }
+}
